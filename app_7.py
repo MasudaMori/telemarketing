@@ -15,7 +15,7 @@ sns.set_theme(style="ticks", rc=custom_params)
 
 
 # Função para ler os dados
-@st.cache(show_spinner= True, allow_output_mutation=True)
+@st.cache_data(show_spinner=True)
 def load_data(file_data):
     try:
         return pd.read_csv(file_data, sep=';')
@@ -23,7 +23,7 @@ def load_data(file_data):
         return pd.read_excel(file_data)
 
 # Função para filtrar baseado na multiseleção de categorias
-@st.cache(allow_output_mutation=True)
+@st.cache_data
 def multiselect_filter(relatorio, col, selecionados):
     if 'all' in selecionados:
         return relatorio
@@ -31,12 +31,12 @@ def multiselect_filter(relatorio, col, selecionados):
         return relatorio[relatorio[col].isin(selecionados)].reset_index(drop=True)
 
 # Função para converter o df para csv
-@st.cache
+@st.cache_data
 def convert_df(df):
     return df.to_csv(index=False).encode('utf-8')
 
 # Função para converter o df para excel
-@st.cache
+@st.cache_data
 def to_excel(df):
     output = BytesIO()
     writer = pd.ExcelWriter(output, engine='xlsxwriter')
@@ -47,8 +47,6 @@ def to_excel(df):
 
 
 def main():
-    # Não precisa mais chamar `st.set_page_config()` aqui
-
     st.write('# Telemarketing Analysis')
     st.markdown("---")
     
@@ -58,10 +56,10 @@ def main():
 
     # Botão para carregar arquivo na aplicação
     st.sidebar.write("## Suba o arquivo")
-    data_file_1 = st.sidebar.file_uploader("Bank marketing data", type = ['csv','xlsx'])
+    data_file_1 = st.sidebar.file_uploader("Bank marketing data", type=['csv','xlsx'])
 
     # Verifica se há conteúdo carregado na aplicação
-    if (data_file_1 is not None):
+    if data_file_1 is not None:
         bank_raw = load_data(data_file_1)
         bank = bank_raw.copy()
 
@@ -77,20 +75,14 @@ def main():
             max_age = int(bank.age.max())
             min_age = int(bank.age.min())
             idades = st.slider(label='Idade', 
-                               min_value = min_age,
-                               max_value = max_age, 
-                               value = (min_age, max_age),
-                               step = 1)
+                               min_value=min_age,
+                               max_value=max_age, 
+                               value=(min_age, max_age),
+                               step=1)
 
 # Inicia a aplicação
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
 
 
 
