@@ -79,6 +79,14 @@ def main():
                                max_value=max_age, 
                                value=(min_age, max_age),
                                step=1)
+            
+            # Botão de envio
+            submit_button = st.form_submit_button(label='Aplicar')
+
+        # Processa as seleções apenas se o botão de envio for pressionado
+        if submit_button:
+            st.write(f"Gráfico selecionado: {graph_type}")
+            st.write(f"Idades selecionadas: {idades}")
 
 # Inicia a aplicação
 if __name__ == '__main__':
