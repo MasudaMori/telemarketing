@@ -141,7 +141,10 @@ def main():
 
 
             submit_button = st.form_submit_button(label='Aplicar')
-        
+
+	 # Gráficos
+        fig, ax = plt.subplots(1, 2, figsize=(12, 6))    
+
         # Gráfico para os dados brutos
         bank_raw_target_perc = bank_raw.y.value_counts(normalize=True).to_frame() * 100
         bank_raw_target_perc = bank_raw_target_perc.rename(columns={'y': 'proportion'}).sort_index()
