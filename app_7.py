@@ -142,27 +142,22 @@ def main():
 
             submit_button = st.form_submit_button(label='Aplicar')
         
-        # Botões de download dos dados filtrados
-        st.write('## Após os filtros')
-        st.write(bank.head())
-        
-        df_xlsx = to_excel(bank)
-        st.download_button(label='📥 Download tabela filtrada em EXCEL',
-                            data=df_xlsx ,
-                            file_name= 'bank_filtered.xlsx')
-        st.markdown("---")
+        # Gráfico para os dados brutos
+        bank_raw_target_perc = bank_raw.y.value_counts(normalize=True).to_frame() * 100
+        bank_raw_target_perc = bank_raw_target_perc.rename(columns={'y': 'proportion'}).sort_index()
+        sns.barplot(x=bank_raw_target_perc.index, y='proportion', data=bank_raw_target_perc, ax=ax[0])  # Usando 'proportion'
+        ax[0].bar_label(ax[0].containers[0])
+        ax[0].set_title('Dados brutos', fontweight="bold")
 
-        # PLOTS    
-        fig, ax = plt.subplots(1, 2, figsize = (5,3))
-
-        bank_raw_target_perc = bank_raw.y.value_counts(normalize = True).to_frame()*100
-        bank_raw_target_perc = bank_raw_target_perc.sort_index()
-        
+        # Gráfico para os dados filtrados
         try:
-            bank_target_perc = bank.y.value_counts(normalize = True).to_frame()*100
-            bank_target_perc = bank_target_perc.sort_index()
-        except:
-            st.error('Erro no filtro')
+            bank_target_perc = bank.y.value_counts(normalize=True).to_frame() * 100
+            bank_target_perc = bank_target_perc.rename(columns={'y': 'proportion'}).sort_index()
+            sns.barplot(x=bank_target_perc.index, y='proportion', data=bank_target_perc, ax=ax[1])  # Usando 'proportion'
+            ax[1].bar_label(ax[1].containers[0])
+            ax[1].set_title('Dados filtrados', fontweight="bold")
+        except Exception as e:
+            st.error(f"Erro nos filtros: {e}")
         
         # Botões de download dos dados dos gráficos
         col1, col2 = st.columns(2)
